@@ -7,7 +7,7 @@ Backend base do AutoProfit, um sistema distribuído para gestão de revendas de 
 O projeto pode ser executado de duas formas:
 
 - Com Docker Compose: sobe PostgreSQL, RabbitMQ e todos os serviços.
-- Local sem Docker: roda a aplicação NestJS pelo Node.js da máquina, usando um PostgreSQL acessível em `localhost`.
+- Local sem Docker: roda um serviço NestJS específico pelo Node.js da máquina, usando PostgreSQL e RabbitMQ acessíveis em `localhost`.
 
 ## Rodando com Docker Compose
 
@@ -94,9 +94,9 @@ Os dados são persistidos no volume Docker `postgres_data`.
 - Report Service: http://localhost:3006/api
 - Notification Service: http://localhost:3007/api
 
-## Rodando Local sem Docker
+## Rodando um Serviço Local sem Docker
 
-Este modo executa a aplicação NestJS diretamente na máquina. Ele não sobe PostgreSQL nem RabbitMQ automaticamente.
+Este modo executa apenas um serviço NestJS diretamente na máquina. Ele não sobe PostgreSQL nem RabbitMQ automaticamente.
 
 Pré-requisitos:
 
@@ -104,15 +104,24 @@ Pré-requisitos:
 - PostgreSQL rodando localmente ou exposto em `localhost:5432`.
 - RabbitMQ local apenas se o fluxo em desenvolvimento depender de mensageria.
 
-Instale as dependências:
+Entre na pasta do serviço que deseja rodar:
+
+```bash
+cd auth-service
+```
+
+Instale as dependências do serviço:
 
 ```bash
 npm install
 ```
 
-Configure o `.env` local com a URL do banco acessível pela máquina:
+Configure o `.env` local desse serviço com a URL do banco acessível pela máquina:
 
 ```env
+NODE_ENV=development
+SERVICE_NAME=auth-service
+PORT=3002
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/autoprofit?schema=public"
 RABBITMQ_URL="amqp://localhost:5672"
 JWT_SECRET="development-secret"
@@ -121,49 +130,47 @@ SWAGGER_ROUTE=api
 API_DOCS_UI=scalar
 ```
 
-Gere o client do Prisma:
-
-```bash
-npm run prisma:generate
-```
-
-Rode a aplicação em desenvolvimento:
+Rode o serviço em desenvolvimento:
 
 ```bash
 npm run start:dev
 ```
 
-Por padrão, a aplicação local usa `PORT=3000` quando a variável `PORT` não é definida.
-
-Documentação local:
+Documentação local do serviço:
 
 ```text
-http://localhost:3000/api
+http://localhost:3002/api
+```
+
+Para rodar outro serviço localmente, entre na pasta correspondente e ajuste `SERVICE_NAME` e `PORT` de acordo com a tabela de portas.
+
+Exemplo para o Vehicle Service:
+
+```bash
+cd vehicle-service
+npm install
+npm run start:dev
 ```
 
 ## Comandos Úteis
 
-Build:
+Build de um serviço:
 
 ```bash
 npm run build
 ```
 
-Testes unitários:
+Start de produção de um serviço:
+
+```bash
+npm run start:prod
+```
+
+Na raiz, os comandos de teste e lint continuam validando a base compartilhada já existente:
 
 ```bash
 npm test
-```
-
-Testes e2e:
-
-```bash
 npm run test:e2e
-```
-
-Lint:
-
-```bash
 npm run lint
 ```
 
@@ -181,7 +188,7 @@ Use `API_DOCS_UI=swagger` para trocar a interface para Swagger UI.
 
 ## Estrutura dos Serviços
 
-Cada serviço possui seu próprio diretório com `Dockerfile` e `.env.example`:
+Cada serviço possui seu próprio diretório com `src`, `package.json`, `Dockerfile` e `.env.example`:
 
 - `gateway`
 - `auth-service`
@@ -191,4 +198,4 @@ Cada serviço possui seu próprio diretório com `Dockerfile` e `.env.example`:
 - `report-service`
 - `notification-service`
 
-Nesta fase, os serviços ainda usam a base NestJS mínima do projeto. Nenhuma regra de negócio foi implementada.
+Nesta fase, os serviços possuem aplicações NestJS mínimas e independentes. Nenhuma regra de negócio foi implementada.
