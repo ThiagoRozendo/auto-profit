@@ -1,98 +1,194 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# AutoProfit
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend base do AutoProfit, um sistema distribuído para gestão de revendas de veículos. Esta etapa entrega a infraestrutura inicial com NestJS, Prisma 7, Swagger/Scalar, PostgreSQL e RabbitMQ.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Modos de Execução
 
-## Description
+O projeto pode ser executado de duas formas:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Com Docker Compose: sobe PostgreSQL, RabbitMQ e todos os serviços.
+- Local sem Docker: roda a aplicação NestJS pelo Node.js da máquina, usando um PostgreSQL acessível em `localhost`.
 
-## Project setup
+## Rodando com Docker Compose
+
+Este é o modo recomendado para validar a infraestrutura distribuída completa.
+
+Pré-requisito:
+
+- Docker Desktop em execução.
+
+Suba todos os containers:
 
 ```bash
-$ npm install
+docker compose up -d
 ```
 
-## Compile and run the project
+Verifique os containers:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+docker ps
 ```
 
-## Run tests
+Pare os containers:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+docker compose down
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Pare os containers e remova o volume do banco:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+docker compose down -v
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Containers
 
-## Resources
+- `postgres`: banco PostgreSQL.
+- `rabbitmq`: broker RabbitMQ com interface de gerenciamento.
+- `gateway`: API Gateway.
+- `auth-service`: serviço de autenticação.
+- `vehicle-service`: serviço de veículos.
+- `expense-service`: serviço de despesas.
+- `pricing-service`: serviço de precificação.
+- `report-service`: serviço de relatórios.
+- `notification-service`: serviço de notificações.
 
-Check out a few resources that may come in handy when working with NestJS:
+### Banco no Docker
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+O PostgreSQL do Docker Compose usa:
 
-## Support
+```env
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=autoprofit
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Dentro da rede Docker, os serviços acessam o banco por:
 
-## Stay in touch
+```env
+DATABASE_URL="postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public"
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Os dados são persistidos no volume Docker `postgres_data`.
 
-## License
+### Portas no Docker
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- `gateway`: http://localhost:3001
+- `auth-service`: http://localhost:3002
+- `vehicle-service`: http://localhost:3003
+- `expense-service`: http://localhost:3004
+- `pricing-service`: http://localhost:3005
+- `report-service`: http://localhost:3006
+- `notification-service`: http://localhost:3007
+- `postgres`: localhost:5432
+- `rabbitmq`: localhost:5672
+- `rabbitmq-management`: http://localhost:15672
+
+### Documentação das APIs no Docker
+
+- Gateway: http://localhost:3001/api
+- Auth Service: http://localhost:3002/api
+- Vehicle Service: http://localhost:3003/api
+- Expense Service: http://localhost:3004/api
+- Pricing Service: http://localhost:3005/api
+- Report Service: http://localhost:3006/api
+- Notification Service: http://localhost:3007/api
+
+## Rodando Local sem Docker
+
+Este modo executa a aplicação NestJS diretamente na máquina. Ele não sobe PostgreSQL nem RabbitMQ automaticamente.
+
+Pré-requisitos:
+
+- Node.js 22 ou superior.
+- PostgreSQL rodando localmente ou exposto em `localhost:5432`.
+- RabbitMQ local apenas se o fluxo em desenvolvimento depender de mensageria.
+
+Instale as dependências:
+
+```bash
+npm install
+```
+
+Configure o `.env` local com a URL do banco acessível pela máquina:
+
+```env
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/autoprofit?schema=public"
+RABBITMQ_URL="amqp://localhost:5672"
+JWT_SECRET="development-secret"
+SWAGGER_DOCS=true
+SWAGGER_ROUTE=api
+API_DOCS_UI=scalar
+```
+
+Gere o client do Prisma:
+
+```bash
+npm run prisma:generate
+```
+
+Rode a aplicação em desenvolvimento:
+
+```bash
+npm run start:dev
+```
+
+Por padrão, a aplicação local usa `PORT=3000` quando a variável `PORT` não é definida.
+
+Documentação local:
+
+```text
+http://localhost:3000/api
+```
+
+## Comandos Úteis
+
+Build:
+
+```bash
+npm run build
+```
+
+Testes unitários:
+
+```bash
+npm test
+```
+
+Testes e2e:
+
+```bash
+npm run test:e2e
+```
+
+Lint:
+
+```bash
+npm run lint
+```
+
+## Variáveis de Documentação
+
+As documentações das APIs ficam disponíveis em `/api` quando `SWAGGER_DOCS=true`.
+
+```env
+SWAGGER_DOCS=true
+SWAGGER_ROUTE=api
+API_DOCS_UI=scalar
+```
+
+Use `API_DOCS_UI=swagger` para trocar a interface para Swagger UI.
+
+## Estrutura dos Serviços
+
+Cada serviço possui seu próprio diretório com `Dockerfile` e `.env.example`:
+
+- `gateway`
+- `auth-service`
+- `vehicle-service`
+- `expense-service`
+- `pricing-service`
+- `report-service`
+- `notification-service`
+
+Nesta fase, os serviços ainda usam a base NestJS mínima do projeto. Nenhuma regra de negócio foi implementada.

@@ -1,0 +1,172 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: autoprofit
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  gateway:
+    build:
+      context: .
+      dockerfile: gateway/Dockerfile
+    container_name: gateway
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
+      RABBITMQ_URL: amqp://rabbitmq:5672
+      JWT_SECRET: development-secret
+      SWAGGER_DOCS: "true"
+      SWAGGER_ROUTE: api
+      API_DOCS_UI: scalar
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
+    container_name: auth-service
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 3002
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
+      RABBITMQ_URL: amqp://rabbitmq:5672
+      JWT_SECRET: development-secret
+      SWAGGER_DOCS: "true"
+      SWAGGER_ROUTE: api
+      API_DOCS_UI: scalar
+    ports:
+      - "3002:3002"
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  vehicle-service:
+    build:
+      context: .
+      dockerfile: vehicle-service/Dockerfile
+    container_name: vehicle-service
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 3003
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
+      RABBITMQ_URL: amqp://rabbitmq:5672
+      JWT_SECRET: development-secret
+      SWAGGER_DOCS: "true"
+      SWAGGER_ROUTE: api
+      API_DOCS_UI: scalar
+    ports:
+      - "3003:3003"
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  expense-service:
+    build:
+      context: .
+      dockerfile: expense-service/Dockerfile
+    container_name: expense-service
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 3004
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
+      RABBITMQ_URL: amqp://rabbitmq:5672
+      JWT_SECRET: development-secret
+      SWAGGER_DOCS: "true"
+      SWAGGER_ROUTE: api
+      API_DOCS_UI: scalar
+    ports:
+      - "3004:3004"
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  pricing-service:
+    build:
+      context: .
+      dockerfile: pricing-service/Dockerfile
+    container_name: pricing-service
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 3005
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
+      RABBITMQ_URL: amqp://rabbitmq:5672
+      JWT_SECRET: development-secret
+      SWAGGER_DOCS: "true"
+      SWAGGER_ROUTE: api
+      API_DOCS_UI: scalar
+    ports:
+      - "3005:3005"
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  report-service:
+    build:
+      context: .
+      dockerfile: report-service/Dockerfile
+    container_name: report-service
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 3006
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
+      RABBITMQ_URL: amqp://rabbitmq:5672
+      JWT_SECRET: development-secret
+      SWAGGER_DOCS: "true"
+      SWAGGER_ROUTE: api
+      API_DOCS_UI: scalar
+    ports:
+      - "3006:3006"
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: notification-service/Dockerfile
+    container_name: notification-service
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 3007
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
+      RABBITMQ_URL: amqp://rabbitmq:5672
+      JWT_SECRET: development-secret
+      SWAGGER_DOCS: "true"
+      SWAGGER_ROUTE: api
+      API_DOCS_UI: scalar
+    ports:
+      - "3007:3007"
+    depends_on:
+      - postgres
+      - rabbitmq
+
+volumes:
+  postgres_data:
+
