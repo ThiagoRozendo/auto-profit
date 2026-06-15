@@ -22,12 +22,13 @@ services:
 
   gateway:
     build:
-      context: .
-      dockerfile: gateway/Dockerfile
+      context: ./gateway
+      dockerfile: Dockerfile
     container_name: gateway
     restart: unless-stopped
     environment:
       NODE_ENV: development
+      SERVICE_NAME: gateway
       PORT: 3001
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
       RABBITMQ_URL: amqp://rabbitmq:5672
@@ -43,12 +44,13 @@ services:
 
   auth-service:
     build:
-      context: .
-      dockerfile: auth-service/Dockerfile
+      context: ./auth-service
+      dockerfile: Dockerfile
     container_name: auth-service
     restart: unless-stopped
     environment:
       NODE_ENV: development
+      SERVICE_NAME: auth-service
       PORT: 3002
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
       RABBITMQ_URL: amqp://rabbitmq:5672
@@ -64,12 +66,13 @@ services:
 
   vehicle-service:
     build:
-      context: .
-      dockerfile: vehicle-service/Dockerfile
+      context: ./vehicle-service
+      dockerfile: Dockerfile
     container_name: vehicle-service
     restart: unless-stopped
     environment:
       NODE_ENV: development
+      SERVICE_NAME: vehicle-service
       PORT: 3003
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
       RABBITMQ_URL: amqp://rabbitmq:5672
@@ -85,12 +88,13 @@ services:
 
   expense-service:
     build:
-      context: .
-      dockerfile: expense-service/Dockerfile
+      context: ./expense-service
+      dockerfile: Dockerfile
     container_name: expense-service
     restart: unless-stopped
     environment:
       NODE_ENV: development
+      SERVICE_NAME: expense-service
       PORT: 3004
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
       RABBITMQ_URL: amqp://rabbitmq:5672
@@ -106,12 +110,13 @@ services:
 
   pricing-service:
     build:
-      context: .
-      dockerfile: pricing-service/Dockerfile
+      context: ./pricing-service
+      dockerfile: Dockerfile
     container_name: pricing-service
     restart: unless-stopped
     environment:
       NODE_ENV: development
+      SERVICE_NAME: pricing-service
       PORT: 3005
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
       RABBITMQ_URL: amqp://rabbitmq:5672
@@ -127,12 +132,13 @@ services:
 
   report-service:
     build:
-      context: .
-      dockerfile: report-service/Dockerfile
+      context: ./report-service
+      dockerfile: Dockerfile
     container_name: report-service
     restart: unless-stopped
     environment:
       NODE_ENV: development
+      SERVICE_NAME: report-service
       PORT: 3006
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
       RABBITMQ_URL: amqp://rabbitmq:5672
@@ -148,12 +154,13 @@ services:
 
   notification-service:
     build:
-      context: .
-      dockerfile: notification-service/Dockerfile
+      context: ./notification-service
+      dockerfile: Dockerfile
     container_name: notification-service
     restart: unless-stopped
     environment:
       NODE_ENV: development
+      SERVICE_NAME: notification-service
       PORT: 3007
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
       RABBITMQ_URL: amqp://rabbitmq:5672
@@ -169,4 +176,3 @@ services:
 
 volumes:
   postgres_data:
-
