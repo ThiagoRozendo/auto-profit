@@ -5,7 +5,7 @@ import { pathToFileURL } from 'node:url';
 import type { PrismaClient } from '../generated/prisma/client';
 
 const defaultDatabaseUrl =
-  'postgresql://postgres:postgres@localhost:5432/auto_profit?schema=public';
+  'postgresql://postgres:postgres@localhost:5432/autoprofit?schema=public';
 
 @Injectable()
 export class PrismaService implements OnModuleDestroy {

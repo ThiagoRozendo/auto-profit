@@ -2,10 +2,10 @@ import 'dotenv/config';
 import { defineConfig } from 'prisma/config';
 
 const defaultDatabaseUrl =
-  'postgresql://postgres:postgres@localhost:5432/auto_profit?schema=public';
+  'postgresql://postgres:postgres@localhost:5432/autoprofit?schema=public';
 
 const defaultShadowDatabaseUrl =
-  'postgresql://postgres:postgres@localhost:5432/auto_profit_shadow?schema=public';
+  'postgresql://postgres:postgres@localhost:5432/autoprofit_shadow?schema=public';
 
 export default defineConfig({
   schema: 'prisma/schema.prisma',
