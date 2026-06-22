@@ -1,50 +1,61 @@
 # AutoProfit
 
-Backend base do AutoProfit, um sistema distribuído para gestão de revendas de veículos. Esta etapa entrega a infraestrutura inicial com NestJS, Prisma 7, Swagger/Scalar, PostgreSQL e RabbitMQ.
+Backend base do AutoProfit, um sistema distribuído para gestão de revendas de veículos. A infraestrutura inicial usa NestJS, Prisma 7, PostgreSQL multi-schema, RabbitMQ, Docker Compose e documentação Swagger/Scalar.
 
-## Modos de Execução
+## Arquitetura
 
-O projeto pode ser executado de duas formas:
+O projeto é composto por serviços independentes. Cada serviço roda em seu próprio processo, possui seu próprio `package.json`, `Dockerfile`, `.env.example`, `src/` e configuração Prisma.
 
-- Com Docker Compose: sobe PostgreSQL, RabbitMQ e todos os serviços.
-- Local sem Docker: roda um serviço NestJS específico pelo Node.js da máquina, usando PostgreSQL e RabbitMQ acessíveis em `localhost`.
+| Serviço | Porta | Schema PostgreSQL | Swagger/Scalar |
+| --- | ---: | --- | --- |
+| `gateway` | `3001` | não usa schema próprio nesta etapa | `http://localhost:3001/api` |
+| `auth-service` | `3002` | `auth` | `http://localhost:3002/api` |
+| `vehicle-service` | `3003` | `vehicle` | `http://localhost:3003/api` |
+| `expense-service` | `3004` | `expense` | `http://localhost:3004/api` |
+| `pricing-service` | `3005` | `pricing` | `http://localhost:3005/api` |
+| `report-service` | `3006` | `report` | `http://localhost:3006/api` |
+| `notification-service` | `3007` | `notification` | `http://localhost:3007/api` |
+
+O diretório `src/` da raiz pertence à aplicação base original do repositório. Para o projeto distribuído, novas funcionalidades devem ser implementadas dentro do `src/` do serviço responsável, por exemplo `auth-service/src`.
 
 ## Rodando com Docker Compose
 
-Este é o modo recomendado para validar a infraestrutura distribuída completa.
+Use este modo para subir a infraestrutura distribuída completa.
 
-Pré-requisito:
+Pré-requisitos:
 
 - Docker Desktop em execução.
 
-Suba todos os containers:
+Subir todos os containers:
 
 ```bash
 docker compose up -d
 ```
 
-Verifique os containers:
+Verificar containers:
 
 ```bash
 docker ps
 ```
 
-Pare os containers:
+Parar containers:
 
 ```bash
 docker compose down
 ```
 
-Pare os containers e remova o volume do banco:
+Parar containers e apagar o volume do PostgreSQL:
 
 ```bash
 docker compose down -v
 ```
 
+Use `docker compose down -v` quando precisar recriar o banco do zero. Scripts em `docker/postgres/init.sql` só rodam automaticamente quando o volume do PostgreSQL é criado pela primeira vez.
+
 ### Containers
 
-- `postgres`: banco PostgreSQL.
-- `rabbitmq`: broker RabbitMQ com interface de gerenciamento.
+- `postgres`: PostgreSQL.
+- `rabbitmq`: RabbitMQ com interface de gerenciamento.
 - `gateway`: API Gateway.
 - `auth-service`: serviço de autenticação.
 - `vehicle-service`: serviço de veículos.
@@ -53,9 +64,24 @@ docker compose down -v
 - `report-service`: serviço de relatórios.
 - `notification-service`: serviço de notificações.
 
-### Banco no Docker
+### Portas
 
-O PostgreSQL do Docker Compose usa:
+| Container | URL/porta |
+| --- | --- |
+| Gateway | `http://localhost:3001` |
+| Auth Service | `http://localhost:3002` |
+| Vehicle Service | `http://localhost:3003` |
+| Expense Service | `http://localhost:3004` |
+| Pricing Service | `http://localhost:3005` |
+| Report Service | `http://localhost:3006` |
+| Notification Service | `http://localhost:3007` |
+| PostgreSQL | `localhost:5432` |
+| RabbitMQ | `localhost:5672` |
+| RabbitMQ Management | `http://localhost:15672` |
+
+## Banco de Dados
+
+O projeto usa um único PostgreSQL com um banco principal e um banco shadow para migrations do Prisma:
 
 ```env
 POSTGRES_USER=postgres
@@ -63,66 +89,65 @@ POSTGRES_PASSWORD=postgres
 POSTGRES_DB=autoprofit
 ```
 
-Dentro da rede Docker, os serviços acessam o banco por:
+O banco principal é `autoprofit`. O banco shadow é `autoprofit_shadow`.
 
-```env
-DATABASE_URL="postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public"
+O script `docker/postgres/init.sql` cria os schemas abaixo nos dois bancos:
+
+```text
+auth
+vehicle
+expense
+pricing
+report
+notification
 ```
 
-Os dados são persistidos no volume Docker `postgres_data`.
+Cada serviço acessa apenas o próprio schema. O schema `public` não deve ser usado pelos serviços.
 
-### Portas no Docker
+Exemplo do Auth Service dentro do Docker Compose:
 
-- `gateway`: http://localhost:3001
-- `auth-service`: http://localhost:3002
-- `vehicle-service`: http://localhost:3003
-- `expense-service`: http://localhost:3004
-- `pricing-service`: http://localhost:3005
-- `report-service`: http://localhost:3006
-- `notification-service`: http://localhost:3007
-- `postgres`: localhost:5432
-- `rabbitmq`: localhost:5672
-- `rabbitmq-management`: http://localhost:15672
+```env
+DATABASE_URL="postgresql://postgres:postgres@postgres:5432/autoprofit?schema=auth"
+SHADOW_DATABASE_URL="postgresql://postgres:postgres@postgres:5432/autoprofit_shadow?schema=auth"
+```
 
-### Documentação das APIs no Docker
+Exemplo do Auth Service rodando localmente na máquina:
 
-- Gateway: http://localhost:3001/api
-- Auth Service: http://localhost:3002/api
-- Vehicle Service: http://localhost:3003/api
-- Expense Service: http://localhost:3004/api
-- Pricing Service: http://localhost:3005/api
-- Report Service: http://localhost:3006/api
-- Notification Service: http://localhost:3007/api
+```env
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/autoprofit?schema=auth"
+SHADOW_DATABASE_URL="postgresql://postgres:postgres@localhost:5432/autoprofit_shadow?schema=auth"
+```
 
-## Rodando um Serviço Local sem Docker
+## Rodando um Serviço Localmente
 
 Este modo executa apenas um serviço NestJS diretamente na máquina. Ele não sobe PostgreSQL nem RabbitMQ automaticamente.
 
 Pré-requisitos:
 
 - Node.js 22 ou superior.
-- PostgreSQL rodando localmente ou exposto em `localhost:5432`.
-- RabbitMQ local apenas se o fluxo em desenvolvimento depender de mensageria.
+- PostgreSQL acessível em `localhost:5432`.
+- RabbitMQ acessível em `localhost:5672`, caso o fluxo em desenvolvimento use mensageria.
 
-Entre na pasta do serviço que deseja rodar:
+Entre na pasta do serviço:
 
 ```bash
 cd auth-service
 ```
 
-Instale as dependências do serviço:
+Instale as dependências:
 
 ```bash
 npm install
 ```
 
-Configure o `.env` local desse serviço com a URL do banco acessível pela máquina:
+Crie o `.env` a partir do `.env.example` do serviço e ajuste as URLs para `localhost`:
 
 ```env
 NODE_ENV=development
 SERVICE_NAME=auth-service
 PORT=3002
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/autoprofit?schema=public"
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/autoprofit?schema=auth"
+SHADOW_DATABASE_URL="postgresql://postgres:postgres@localhost:5432/autoprofit_shadow?schema=auth"
 RABBITMQ_URL="amqp://localhost:5672"
 JWT_SECRET="development-secret"
 SWAGGER_DOCS=true
@@ -130,51 +155,42 @@ SWAGGER_ROUTE=api
 API_DOCS_UI=scalar
 ```
 
-Rode o serviço em desenvolvimento:
+Rode o serviço:
 
 ```bash
 npm run start:dev
 ```
 
-Documentação local do serviço:
+Para rodar outro serviço localmente, entre na pasta dele e use a porta e o schema correspondentes à tabela de arquitetura.
 
-```text
-http://localhost:3002/api
+## Prisma nos Serviços
+
+Cada serviço de domínio possui seu próprio `prisma/schema.prisma`.
+
+Nesta etapa, os schemas Prisma ficam apenas com a configuração base:
+
+```prisma
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
 ```
 
-Para rodar outro serviço localmente, entre na pasta correspondente e ajuste `SERVICE_NAME` e `PORT` de acordo com a tabela de portas.
+Não há models, enums ou migrations de negócio nesta configuração inicial. Cada integrante deve criar as futuras migrations apenas dentro do serviço responsável pelo módulo.
 
-Exemplo para o Vehicle Service:
+Comandos úteis dentro de um serviço:
 
 ```bash
-cd vehicle-service
-npm install
-npm run start:dev
+npm run prisma:generate
+npm run prisma:migrate:dev
+npm run prisma:migrate:deploy
 ```
 
-## Comandos Úteis
-
-Build de um serviço:
-
-```bash
-npm run build
-```
-
-Start de produção de um serviço:
-
-```bash
-npm run start:prod
-```
-
-Na raiz, os comandos de teste e lint continuam validando a base compartilhada já existente:
-
-```bash
-npm test
-npm run test:e2e
-npm run lint
-```
-
-## Variáveis de Documentação
+## Swagger e Scalar
 
 As documentações das APIs ficam disponíveis em `/api` quando `SWAGGER_DOCS=true`.
 
@@ -186,16 +202,13 @@ API_DOCS_UI=scalar
 
 Use `API_DOCS_UI=swagger` para trocar a interface para Swagger UI.
 
-## Estrutura dos Serviços
+## Comandos da Raiz
 
-Cada serviço possui seu próprio diretório com `src`, `package.json`, `Dockerfile` e `.env.example`:
+Na raiz, os comandos abaixo validam a aplicação base compartilhada:
 
-- `gateway`
-- `auth-service`
-- `vehicle-service`
-- `expense-service`
-- `pricing-service`
-- `report-service`
-- `notification-service`
-
-Nesta fase, os serviços possuem aplicações NestJS mínimas e independentes. Nenhuma regra de negócio foi implementada.
+```bash
+npm run build
+npm test
+npm run test:e2e
+npm run lint
+```

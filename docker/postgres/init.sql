@@ -1,0 +1,22 @@
+SELECT 'CREATE DATABASE autoprofit_shadow'
+WHERE NOT EXISTS (
+  SELECT FROM pg_database WHERE datname = 'autoprofit_shadow'
+)\gexec
+
+\connect autoprofit
+
+CREATE SCHEMA IF NOT EXISTS auth;
+CREATE SCHEMA IF NOT EXISTS vehicle;
+CREATE SCHEMA IF NOT EXISTS expense;
+CREATE SCHEMA IF NOT EXISTS pricing;
+CREATE SCHEMA IF NOT EXISTS report;
+CREATE SCHEMA IF NOT EXISTS notification;
+
+\connect autoprofit_shadow
+
+CREATE SCHEMA IF NOT EXISTS auth;
+CREATE SCHEMA IF NOT EXISTS vehicle;
+CREATE SCHEMA IF NOT EXISTS expense;
+CREATE SCHEMA IF NOT EXISTS pricing;
+CREATE SCHEMA IF NOT EXISTS report;
+CREATE SCHEMA IF NOT EXISTS notification;

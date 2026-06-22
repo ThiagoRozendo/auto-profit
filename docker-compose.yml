@@ -11,6 +11,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
   rabbitmq:
     image: rabbitmq:management
@@ -30,7 +31,8 @@ services:
       NODE_ENV: development
       SERVICE_NAME: gateway
       PORT: 3001
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
+      DATABASE_URL: ""
+      SHADOW_DATABASE_URL: ""
       RABBITMQ_URL: amqp://rabbitmq:5672
       JWT_SECRET: development-secret
       SWAGGER_DOCS: "true"
@@ -52,7 +54,8 @@ services:
       NODE_ENV: development
       SERVICE_NAME: auth-service
       PORT: 3002
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=auth
+      SHADOW_DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit_shadow?schema=auth
       RABBITMQ_URL: amqp://rabbitmq:5672
       JWT_SECRET: development-secret
       SWAGGER_DOCS: "true"
@@ -74,7 +77,8 @@ services:
       NODE_ENV: development
       SERVICE_NAME: vehicle-service
       PORT: 3003
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=vehicle
+      SHADOW_DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit_shadow?schema=vehicle
       RABBITMQ_URL: amqp://rabbitmq:5672
       JWT_SECRET: development-secret
       SWAGGER_DOCS: "true"
@@ -96,7 +100,8 @@ services:
       NODE_ENV: development
       SERVICE_NAME: expense-service
       PORT: 3004
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=expense
+      SHADOW_DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit_shadow?schema=expense
       RABBITMQ_URL: amqp://rabbitmq:5672
       JWT_SECRET: development-secret
       SWAGGER_DOCS: "true"
@@ -118,7 +123,8 @@ services:
       NODE_ENV: development
       SERVICE_NAME: pricing-service
       PORT: 3005
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=pricing
+      SHADOW_DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit_shadow?schema=pricing
       RABBITMQ_URL: amqp://rabbitmq:5672
       JWT_SECRET: development-secret
       SWAGGER_DOCS: "true"
@@ -140,7 +146,8 @@ services:
       NODE_ENV: development
       SERVICE_NAME: report-service
       PORT: 3006
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=report
+      SHADOW_DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit_shadow?schema=report
       RABBITMQ_URL: amqp://rabbitmq:5672
       JWT_SECRET: development-secret
       SWAGGER_DOCS: "true"
@@ -162,7 +169,8 @@ services:
       NODE_ENV: development
       SERVICE_NAME: notification-service
       PORT: 3007
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=public
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=notification
+      SHADOW_DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit_shadow?schema=notification
       RABBITMQ_URL: amqp://rabbitmq:5672
       JWT_SECRET: development-secret
       SWAGGER_DOCS: "true"
