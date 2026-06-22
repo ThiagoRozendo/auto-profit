@@ -10,7 +10,9 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "outDir": "./dist",
+    "types": ["node"],
     "strict": false,
     "skipLibCheck": true
-  }
+  },
+  "exclude": ["node_modules", "dist", "prisma.config.ts"]
 }
