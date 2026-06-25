@@ -52,6 +52,14 @@ docker compose down -v
 
 Use `docker compose down -v` quando precisar recriar o banco do zero. Scripts em `docker/postgres/init.sql` só rodam automaticamente quando o volume do PostgreSQL é criado pela primeira vez.
 
+Para desenvolvimento local de um serviço na máquina, prefira subir apenas a infraestrutura compartilhada:
+
+```bash
+npm run docker:infra:up
+```
+
+Esse fluxo evita conflito de portas com os containers dos próprios serviços quando você roda `npm run start:dev` localmente.
+
 ### Containers
 
 - `postgres`: PostgreSQL.
@@ -75,7 +83,7 @@ Use `docker compose down -v` quando precisar recriar o banco do zero. Scripts em
 | Pricing Service | `http://localhost:3005` |
 | Report Service | `http://localhost:3006` |
 | Notification Service | `http://localhost:3007` |
-| PostgreSQL | `localhost:5432` |
+| PostgreSQL | `localhost:5433` |
 | RabbitMQ | `localhost:5672` |
 | RabbitMQ Management | `http://localhost:15672` |
 
@@ -114,8 +122,8 @@ SHADOW_DATABASE_URL="postgresql://postgres:postgres@postgres:5432/autoprofit_sha
 Exemplo do Auth Service rodando localmente na máquina:
 
 ```env
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/autoprofit?schema=auth"
-SHADOW_DATABASE_URL="postgresql://postgres:postgres@localhost:5432/autoprofit_shadow?schema=auth"
+DATABASE_URL="postgresql://postgres:postgres@localhost:5433/autoprofit?schema=auth"
+SHADOW_DATABASE_URL="postgresql://postgres:postgres@localhost:5433/autoprofit_shadow?schema=auth"
 ```
 
 ## Rodando um Serviço Localmente
@@ -125,7 +133,7 @@ Este modo executa apenas um serviço NestJS diretamente na máquina. Ele não so
 Pré-requisitos:
 
 - Node.js 22 ou superior.
-- PostgreSQL acessível em `localhost:5432`.
+- PostgreSQL acessível em `localhost:5433`.
 - RabbitMQ acessível em `localhost:5672`, caso o fluxo em desenvolvimento use mensageria.
 
 Entre na pasta do serviço:
@@ -146,13 +154,19 @@ Crie o `.env` a partir do `.env.example` do serviço e ajuste as URLs para `loca
 NODE_ENV=development
 SERVICE_NAME=auth-service
 PORT=3002
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/autoprofit?schema=auth"
-SHADOW_DATABASE_URL="postgresql://postgres:postgres@localhost:5432/autoprofit_shadow?schema=auth"
+DATABASE_URL="postgresql://postgres:postgres@localhost:5433/autoprofit?schema=auth"
+SHADOW_DATABASE_URL="postgresql://postgres:postgres@localhost:5433/autoprofit_shadow?schema=auth"
 RABBITMQ_URL="amqp://localhost:5672"
 JWT_SECRET="development-secret"
 SWAGGER_DOCS=true
 SWAGGER_ROUTE=api
 API_DOCS_UI=scalar
+```
+
+Se você tiver subido a stack completa com `docker compose up -d`, pare os containers dos serviços antes de rodar um serviço local:
+
+```bash
+npm run docker:apps:down
 ```
 
 Rode o serviço:

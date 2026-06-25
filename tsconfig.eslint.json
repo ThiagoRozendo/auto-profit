@@ -12,12 +12,19 @@
   },
   "include": [
     "gateway/src/**/*.ts",
+    "gateway/test/**/*.ts",
     "auth-service/src/**/*.ts",
+    "auth-service/test/**/*.ts",
     "vehicle-service/src/**/*.ts",
+    "vehicle-service/test/**/*.ts",
     "expense-service/src/**/*.ts",
+    "expense-service/test/**/*.ts",
     "pricing-service/src/**/*.ts",
+    "pricing-service/test/**/*.ts",
     "report-service/src/**/*.ts",
-    "notification-service/src/**/*.ts"
+    "report-service/test/**/*.ts",
+    "notification-service/src/**/*.ts",
+    "notification-service/test/**/*.ts"
   ],
   "exclude": [
     "**/node_modules/**",
