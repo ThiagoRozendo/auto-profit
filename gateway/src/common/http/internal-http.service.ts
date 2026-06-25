@@ -45,6 +45,41 @@ export class InternalHttpService {
       throw mapInternalHttpError(error);
     }
   }
+
+  async patch<T>(
+    url: string,
+    data: unknown,
+    headers?: Record<string, string>,
+  ): Promise<T> {
+    try {
+      const response = await firstValueFrom(
+        this.httpService.patch<T>(url, data, {
+          headers,
+        }),
+      );
+
+      return response.data;
+    } catch (error) {
+      throw mapInternalHttpError(error);
+    }
+  }
+
+  async delete<T>(
+    url: string,
+    headers?: Record<string, string>,
+  ): Promise<T> {
+    try {
+      const response = await firstValueFrom(
+        this.httpService.delete<T>(url, {
+          headers,
+        }),
+      );
+
+      return response.data;
+    } catch (error) {
+      throw mapInternalHttpError(error);
+    }
+  }
 }
 
 function mapInternalHttpError(error: unknown): HttpException {
@@ -55,7 +90,7 @@ function mapInternalHttpError(error: unknown): HttpException {
     );
   }
 
-  return new ServiceUnavailableException('Auth Service indisponivel');
+  return new ServiceUnavailableException('Serviço interno indisponível');
 }
 
 function normalizeErrorResponse(
