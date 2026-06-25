@@ -31,6 +31,7 @@ services:
       NODE_ENV: development
       SERVICE_NAME: gateway
       PORT: 3001
+      AUTH_SERVICE_URL: http://auth-service:3002
       DATABASE_URL: ""
       SHADOW_DATABASE_URL: ""
       RABBITMQ_URL: amqp://rabbitmq:5672
