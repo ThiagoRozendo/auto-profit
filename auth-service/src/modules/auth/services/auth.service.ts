@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { UsersService } from '../../users/users.service';
 import type { RegisterDto } from '../dto/register.dto';
 import type { LoginDto } from '../dto/login.dto';
-import type { User } from '../../../generated/prisma/browser';
+import type { User } from '../../../generated/prisma/client';
 
 export interface AuthPayload {
   accessToken: string;

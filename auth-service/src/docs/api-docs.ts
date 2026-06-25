@@ -14,6 +14,15 @@ export function setupApiDocs(app: INestApplication): void {
       .setTitle(`${process.env.SERVICE_NAME ?? 'auth-service'} API`)
       .setDescription('AutoProfit distributed service API documentation.')
       .setVersion('1.0.0')
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'Informe o token JWT no formato Bearer.',
+        },
+        'access-token',
+      )
       .build(),
     { autoTagControllers: true },
   );
