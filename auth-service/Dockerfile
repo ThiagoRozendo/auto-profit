@@ -11,4 +11,4 @@ COPY . .
 RUN npm run prisma:generate
 RUN npm run build
 
-CMD ["npm", "run", "start:prod"]
+CMD ["sh", "-c", "npm run prisma:migrate:deploy && npm run start:prod"]
