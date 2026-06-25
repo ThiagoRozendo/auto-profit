@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2023",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "types": ["node"],
+    "strict": false,
+    "skipLibCheck": true
+  },
+  "include": [
+    "gateway/src/**/*.ts",
+    "auth-service/src/**/*.ts",
+    "vehicle-service/src/**/*.ts",
+    "expense-service/src/**/*.ts",
+    "pricing-service/src/**/*.ts",
+    "report-service/src/**/*.ts",
+    "notification-service/src/**/*.ts"
+  ],
+  "exclude": [
+    "**/node_modules/**",
+    "**/dist/**"
+  ]
+}

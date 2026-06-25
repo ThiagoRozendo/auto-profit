@@ -7,6 +7,8 @@ export default tseslint.config(
     {
         ignores: [
             'eslint.config.mjs',
+            '**/dist/**',
+            '**/prisma.config.ts',
             'scripts/*.mjs',
             'scripts/**',
             'jest.config.js',
@@ -76,9 +78,12 @@ export default tseslint.config(
         },
     },
     {
-        files: ['src/**/*.swagger.ts', 'test/data/**'],
+        files: ['src/**/*.swagger.ts', 'test/data/**', '**/src/docs/**/*.ts'],
         rules: {
             '@typescript-eslint/no-unsafe-argument': 'off',
+            '@typescript-eslint/no-unsafe-call': 'off',
+            '@typescript-eslint/no-unsafe-member-access': 'off',
+            '@typescript-eslint/no-unsafe-return': 'off',
         },
     },
 )
