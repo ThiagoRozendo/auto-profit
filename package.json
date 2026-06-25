@@ -19,8 +19,16 @@
     "dev:pricing": "npm run start:dev -w pricing-service",
     "dev:report": "npm run start:dev -w report-service",
     "dev:notification": "npm run start:dev -w notification-service",
+    "lint": "eslint .",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:config": "docker compose config"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "eslint": "^9.39.4",
+    "globals": "^16.5.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.61.0"
   }
 }
