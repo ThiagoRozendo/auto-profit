@@ -3,8 +3,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import type { User } from '../../generated/prisma/browser';
+import type { User } from '../../generated/prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -35,6 +36,17 @@ export class UsersService {
     if (existing) {
       throw new ConflictException('Este e-mail já está em uso');
     }
-    return this.prisma.user.create({ data });
+    try {
+      return await this.prisma.user.create({ data });
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ConflictException('Este e-mail ja esta em uso');
+      }
+
+      throw error;
+    }
   }
 }
