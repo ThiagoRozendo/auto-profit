@@ -12,6 +12,14 @@
     "notification-service"
   ],
   "scripts": {
+    "start:dev": "npm run start:dev -w gateway",
+    "start:dev:gateway": "npm run start:dev -w gateway",
+    "start:dev:auth": "npm run start:dev -w auth-service",
+    "start:dev:vehicle": "npm run start:dev -w vehicle-service",
+    "start:dev:expense": "npm run start:dev -w expense-service",
+    "start:dev:pricing": "npm run start:dev -w pricing-service",
+    "start:dev:report": "npm run start:dev -w report-service",
+    "start:dev:notification": "npm run start:dev -w notification-service",
     "dev:gateway": "npm run start:dev -w gateway",
     "dev:auth": "npm run start:dev -w auth-service",
     "dev:vehicle": "npm run start:dev -w vehicle-service",
@@ -20,6 +28,9 @@
     "dev:report": "npm run start:dev -w report-service",
     "dev:notification": "npm run start:dev -w notification-service",
     "lint": "eslint .",
+    "docker:infra:up": "docker compose up -d postgres rabbitmq",
+    "docker:infra:down": "docker compose stop postgres rabbitmq",
+    "docker:apps:down": "docker compose stop gateway auth-service vehicle-service expense-service pricing-service report-service notification-service",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:config": "docker compose config"
