@@ -11,9 +11,9 @@ export interface InternalUser {
  * Extrai o usuário autenticado dos headers internos repassados pelo API Gateway.
  *
  * Headers esperados:
- *   x-user-id    → UUID do usuário autenticado
- *   x-user-email → e-mail do usuário autenticado
- *   x-user-role  → papel (role) do usuário autenticado
+ *   x-user-id    -> UUID do usuário autenticado
+ *   x-user-email -> e-mail do usuário autenticado
+ *   x-user-role  -> papel (role) do usuário autenticado
  *
  * O Gateway valida o Bearer Token JWT e injeta esses headers antes de
  * encaminhar a requisição para este serviço.

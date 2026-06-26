@@ -29,12 +29,9 @@ export class VehiclesService {
     };
   }
 
-  // ─── helpers ────────────────────────────────────────────────────────────────
-
-  /** Converte campos Decimal do Prisma para Number, tornando o JSON amigável ao frontend. */
   /**
    * Retorna o veículo se existir e pertencer ao usuário.
-   * Lança NotFoundException caso contrário (sem expor dados de outro usuário).
+   * Lança NotFoundException caso contrário, sem expor dados de outro usuário.
    */
   private async findOwnedOrFail(id: string, ownerId: string) {
     const vehicle = await this.prisma.vehicle.findFirst({
@@ -47,8 +44,6 @@ export class VehiclesService {
 
     return vehicle;
   }
-
-  // ─── public methods ──────────────────────────────────────────────────────────
 
   async create(dto: CreateVehicleDto, ownerId: string) {
     const existing = await this.prisma.vehicle.findUnique({
@@ -99,7 +94,7 @@ export class VehiclesService {
       orderBy: { createdAt: 'desc' },
     });
 
-    return vehicles.map((v) => this.serialize(v));
+    return vehicles.map((vehicle) => this.serialize(vehicle));
   }
 
   async findOne(id: string, ownerId: string) {
@@ -114,6 +109,7 @@ export class VehiclesService {
       const existing = await this.prisma.vehicle.findFirst({
         where: { plate: dto.plate, NOT: { id } },
       });
+
       if (existing) {
         throw new ConflictException('Já existe um veículo com esta placa');
       }
@@ -151,16 +147,20 @@ export class VehiclesService {
       throw new BadRequestException('Veículo já está vendido');
     }
 
+    const soldAt = dto.soldAt ? new Date(dto.soldAt) : new Date();
     const updated = await this.prisma.vehicle.update({
       where: { id },
       data: {
         status: VehicleStatus.SOLD,
         salePrice: dto.salePrice,
-        soldAt: dto.soldAt ? new Date(dto.soldAt) : new Date(),
+        soldAt,
         saleNotes: dto.saleNotes ?? null,
       },
     });
 
-    return this.serialize(updated);
+    return {
+      ...this.serialize(updated),
+      soldAt: soldAt.toISOString(),
+    };
   }
 }

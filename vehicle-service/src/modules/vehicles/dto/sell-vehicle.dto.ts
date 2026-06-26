@@ -15,7 +15,10 @@ export class SellVehicleDto {
   @IsDateString({}, { message: 'A data deve ser uma string ISO 8601 válida' })
   soldAt?: string;
 
-  @ApiPropertyOptional({ example: 'Venda à vista', description: 'Observações sobre a venda' })
+  @ApiPropertyOptional({
+    example: 'Venda à vista',
+    description: 'Observações sobre a venda',
+  })
   @IsOptional()
   @IsString()
   saleNotes?: string;

@@ -44,7 +44,10 @@ export class CreateVehicleDto {
   @IsEnum(VehicleStatus, { message: 'Status inválido' })
   status?: VehicleStatus;
 
-  @ApiPropertyOptional({ example: 'Veículo em bom estado', description: 'Observações gerais' })
+  @ApiPropertyOptional({
+    example: 'Veículo em bom estado',
+    description: 'Observações gerais',
+  })
   @IsOptional()
   @IsString()
   observations?: string;
