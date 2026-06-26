@@ -10,14 +10,14 @@ export const registerRequestSchema = {
     name: {
       type: 'string',
       example: 'Joao Silva',
-      description: 'Nome do usuario a ser cadastrado.',
+      description: 'Nome do usuário a ser cadastrado.',
     },
     email: emailSchema(),
     password: {
       type: 'string',
       minLength: 6,
       example: '123456',
-      description: 'Senha com no minimo 6 caracteres.',
+      description: 'Senha com no mínimo 6 caracteres.',
     },
   },
   required: ['name', 'email', 'password'],
@@ -30,7 +30,7 @@ export const loginRequestSchema = {
     password: {
       type: 'string',
       example: '123456',
-      description: 'Senha do usuario.',
+      description: 'Senha do usuário.',
     },
   },
   required: ['email', 'password'],
@@ -77,7 +77,7 @@ export const authServiceUnavailableResponseSchema = {
     },
     message: {
       type: 'string',
-      example: 'Auth Service indisponivel',
+      example: 'Auth Service indisponível',
     },
     error: {
       type: 'string',

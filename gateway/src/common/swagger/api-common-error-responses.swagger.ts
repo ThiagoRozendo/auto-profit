@@ -67,7 +67,7 @@ export function ApiCommonErrorResponses(
   if (includeBadRequest) {
     decorators.push(
       ApiBadRequestResponse({
-        description: 'Dados de entrada invalidos.',
+        description: 'Dados de entrada inválidos.',
         schema: errorResponseSchema(400, 'Bad Request', [
           'email must be an email',
         ]),
@@ -78,11 +78,11 @@ export function ApiCommonErrorResponses(
   if (includeConflict) {
     decorators.push(
       ApiConflictResponse({
-        description: 'Conflito de dominio.',
+        description: 'Conflito de domínio.',
         schema: errorResponseSchema(
           409,
           'Conflict',
-          'Este e-mail ja esta em uso',
+          'Este e-mail já está em uso',
         ),
       }),
     );
@@ -91,11 +91,11 @@ export function ApiCommonErrorResponses(
   if (includeUnauthorized) {
     decorators.push(
       ApiUnauthorizedResponse({
-        description: 'Autenticacao ausente ou invalida.',
+        description: 'Autenticação ausente ou inválida.',
         schema: errorResponseSchema(
           401,
           'Unauthorized',
-          'E-mail ou senha invalidos',
+          'E-mail ou senha inválidos',
         ),
       }),
     );
@@ -113,11 +113,11 @@ export function ApiCommonErrorResponses(
   if (includeNotFound) {
     decorators.push(
       ApiNotFoundResponse({
-        description: 'Recurso nao encontrado.',
+        description: 'Recurso não encontrado.',
         schema: errorResponseSchema(
           404,
           'Not Found',
-          'Usuario nao encontrado',
+          'Usuário não encontrado',
         ),
       }),
     );

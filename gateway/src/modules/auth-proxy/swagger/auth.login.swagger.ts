@@ -15,9 +15,9 @@ import {
 export function LoginAuthApiDocs(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
-      summary: 'Autenticar usuario via Gateway',
+      summary: 'Autenticar usuário via Gateway',
       description:
-        'Encaminha as credenciais recebidas para o Auth Service e retorna o access token JWT emitido por ele quando a autenticacao e bem-sucedida.',
+        'Encaminha as credenciais recebidas para o Auth Service e retorna o access token JWT emitido por ele quando a autenticação é bem-sucedida.',
     }),
     ApiBody({
       required: true,
@@ -28,7 +28,7 @@ export function LoginAuthApiDocs(): MethodDecorator {
       schema: authPayloadResponseSchema,
     }),
     ApiServiceUnavailableResponse({
-      description: 'Auth Service indisponivel para processar o login.',
+      description: 'Auth Service indisponível para processar o login.',
       schema: authServiceUnavailableResponseSchema,
     }),
     ApiCommonErrorResponses({

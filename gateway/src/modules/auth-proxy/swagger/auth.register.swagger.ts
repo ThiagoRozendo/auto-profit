@@ -15,20 +15,20 @@ import {
 export function RegisterAuthApiDocs(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
-      summary: 'Cadastrar usuario via Gateway',
+      summary: 'Cadastrar usuário via Gateway',
       description:
-        'Recebe os dados de cadastro no Gateway, encaminha a requisicao para o Auth Service e devolve a mesma resposta publica do usuario criado.',
+        'Recebe os dados de cadastro no Gateway, encaminha a requisição para o Auth Service e devolve a mesma resposta pública do usuário criado.',
     }),
     ApiBody({
       required: true,
       schema: registerRequestSchema,
     }),
     ApiCreatedResponse({
-      description: 'Usuario criado com sucesso pelo Auth Service.',
+      description: 'Usuário criado com sucesso pelo Auth Service.',
       schema: safeUserResponseSchema,
     }),
     ApiServiceUnavailableResponse({
-      description: 'Auth Service indisponivel para processar o cadastro.',
+      description: 'Auth Service indisponível para processar o cadastro.',
       schema: authServiceUnavailableResponseSchema,
     }),
     ApiCommonErrorResponses({

@@ -15,16 +15,16 @@ export function GetMeAuthApiDocs(): MethodDecorator {
   return applyDecorators(
     ApiBearerAuth('access-token'),
     ApiOperation({
-      summary: 'Buscar usuario autenticado via Gateway',
+      summary: 'Buscar usuário autenticado via Gateway',
       description:
-        'Repassa o Bearer token recebido pelo Gateway para o Auth Service e retorna os dados publicos do usuario autenticado.',
+        'Repassa o Bearer token recebido pelo Gateway para o Auth Service e retorna os dados públicos do usuário autenticado.',
     }),
     ApiOkResponse({
-      description: 'Usuario autenticado retornado com sucesso pelo Auth Service.',
+      description: 'Usuário autenticado retornado com sucesso pelo Auth Service.',
       schema: safeUserResponseSchema,
     }),
     ApiServiceUnavailableResponse({
-      description: 'Auth Service indisponivel para consultar o usuario autenticado.',
+      description: 'Auth Service indisponível para consultar o usuário autenticado.',
       schema: authServiceUnavailableResponseSchema,
     }),
     ApiCommonErrorResponses({
