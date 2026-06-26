@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InternalHttpService } from '../../common/http/internal-http.service';
+import { InternalHttpService } from '../../../common/http/internal-http.service';
 
 function getVehicleServiceUrl(): string {
   return (

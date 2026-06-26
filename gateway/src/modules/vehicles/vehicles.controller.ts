@@ -16,7 +16,7 @@ import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { buildInternalUserHeaders } from '../../common/http/internal-user-headers';
 import type { JwtPayload } from '../../common/auth/jwt-payload.interface';
-import { VehiclesProxyService } from '../services/vehicles-proxy.service';
+import { VehiclesProxyService } from './services/vehicles-proxy.service';
 
 @ApiTags('Vehicles')
 @Controller('vehicles')

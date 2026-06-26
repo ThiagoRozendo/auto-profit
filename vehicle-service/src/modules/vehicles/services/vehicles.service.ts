@@ -14,10 +14,12 @@ import { UpdateVehicleDto } from '../dto/update-vehicle.dto';
 export class VehiclesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // ─── helpers ────────────────────────────────────────────────────────────────
-
-  /** Converte campos Decimal do Prisma para Number, tornando o JSON amigável ao frontend. */
-  private serialize(vehicle: Record<string, unknown>): Record<string, unknown> {
+  private serialize<
+    T extends {
+      purchasePrice: Prisma.Decimal | number | null;
+      salePrice: Prisma.Decimal | number | null;
+    },
+  >(vehicle: T) {
     return {
       ...vehicle,
       purchasePrice:
@@ -27,6 +29,9 @@ export class VehiclesService {
     };
   }
 
+  // ─── helpers ────────────────────────────────────────────────────────────────
+
+  /** Converte campos Decimal do Prisma para Number, tornando o JSON amigável ao frontend. */
   /**
    * Retorna o veículo se existir e pertencer ao usuário.
    * Lança NotFoundException caso contrário (sem expor dados de outro usuário).
@@ -67,7 +72,7 @@ export class VehiclesService {
       },
     });
 
-    return this.serialize(vehicle as unknown as Record<string, unknown>);
+    return this.serialize(vehicle);
   }
 
   async findAll(
@@ -94,14 +99,12 @@ export class VehiclesService {
       orderBy: { createdAt: 'desc' },
     });
 
-    return vehicles.map((v) =>
-      this.serialize(v as unknown as Record<string, unknown>),
-    );
+    return vehicles.map((v) => this.serialize(v));
   }
 
   async findOne(id: string, ownerId: string) {
     const vehicle = await this.findOwnedOrFail(id, ownerId);
-    return this.serialize(vehicle as unknown as Record<string, unknown>);
+    return this.serialize(vehicle);
   }
 
   async update(id: string, dto: UpdateVehicleDto, ownerId: string) {
@@ -133,7 +136,7 @@ export class VehiclesService {
       },
     });
 
-    return this.serialize(vehicle as unknown as Record<string, unknown>);
+    return this.serialize(vehicle);
   }
 
   async remove(id: string, ownerId: string) {
@@ -158,6 +161,6 @@ export class VehiclesService {
       },
     });
 
-    return this.serialize(updated as unknown as Record<string, unknown>);
+    return this.serialize(updated);
   }
 }
