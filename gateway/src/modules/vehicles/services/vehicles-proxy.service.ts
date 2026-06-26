@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InternalHttpService } from '../../../common/http/internal-http.service';
+import type { CreateVehicleDto } from '../dto/create-vehicle.dto';
+import type { ListVehiclesQueryDto } from '../dto/list-vehicles-query.dto';
+import type { SellVehicleDto } from '../dto/sell-vehicle.dto';
+import type { UpdateVehicleDto } from '../dto/update-vehicle.dto';
+import type { VehicleStatus } from '../dto/vehicle-status.enum';
 
 function getVehicleServiceUrl(): string {
   return (
@@ -7,22 +12,42 @@ function getVehicleServiceUrl(): string {
   );
 }
 
+export interface VehicleResponse {
+  id: string;
+  ownerId: string;
+  brand: string;
+  model: string;
+  year: number;
+  plate: string;
+  purchasePrice: number;
+  status: VehicleStatus;
+  observations?: string | null;
+  soldAt?: string | null;
+  salePrice?: number | null;
+  saleNotes?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 @Injectable()
 export class VehiclesProxyService {
   constructor(private readonly internalHttpService: InternalHttpService) {}
 
-  create(body: Record<string, unknown>, headers: Record<string, string>) {
-    return this.internalHttpService.post(
+  create(
+    dto: CreateVehicleDto,
+    headers: Record<string, string>,
+  ): Promise<VehicleResponse> {
+    return this.internalHttpService.post<VehicleResponse>(
       `${getVehicleServiceUrl()}/vehicles`,
-      body,
+      dto,
       headers,
     );
   }
 
   findAll(
     headers: Record<string, string>,
-    query: { status?: string; search?: string },
-  ) {
+    query: ListVehiclesQueryDto,
+  ): Promise<VehicleResponse[]> {
     const params = new URLSearchParams();
     if (query.status) params.append('status', query.status);
     if (query.search) params.append('search', query.search);
@@ -32,11 +57,11 @@ export class VehiclesProxyService {
       ? `${getVehicleServiceUrl()}/vehicles?${qs}`
       : `${getVehicleServiceUrl()}/vehicles`;
 
-    return this.internalHttpService.get(url, headers);
+    return this.internalHttpService.get<VehicleResponse[]>(url, headers);
   }
 
-  findOne(id: string, headers: Record<string, string>) {
-    return this.internalHttpService.get(
+  findOne(id: string, headers: Record<string, string>): Promise<VehicleResponse> {
+    return this.internalHttpService.get<VehicleResponse>(
       `${getVehicleServiceUrl()}/vehicles/${id}`,
       headers,
     );
@@ -44,18 +69,18 @@ export class VehiclesProxyService {
 
   update(
     id: string,
-    body: Record<string, unknown>,
+    dto: UpdateVehicleDto,
     headers: Record<string, string>,
-  ) {
-    return this.internalHttpService.patch(
+  ): Promise<VehicleResponse> {
+    return this.internalHttpService.patch<VehicleResponse>(
       `${getVehicleServiceUrl()}/vehicles/${id}`,
-      body,
+      dto,
       headers,
     );
   }
 
-  remove(id: string, headers: Record<string, string>) {
-    return this.internalHttpService.delete(
+  remove(id: string, headers: Record<string, string>): Promise<void> {
+    return this.internalHttpService.delete<void>(
       `${getVehicleServiceUrl()}/vehicles/${id}`,
       headers,
     );
@@ -63,12 +88,12 @@ export class VehiclesProxyService {
 
   sell(
     id: string,
-    body: Record<string, unknown>,
+    dto: SellVehicleDto,
     headers: Record<string, string>,
-  ) {
-    return this.internalHttpService.patch(
+  ): Promise<VehicleResponse> {
+    return this.internalHttpService.patch<VehicleResponse>(
       `${getVehicleServiceUrl()}/vehicles/${id}/sell`,
-      body,
+      dto,
       headers,
     );
   }
