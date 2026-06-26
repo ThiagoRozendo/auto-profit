@@ -5,6 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  schemas  = ["vehicle"]
 }
 
 enum VehicleStatus {
@@ -12,6 +13,8 @@ enum VehicleStatus {
   RESERVED
   IN_MAINTENANCE
   SOLD
+
+  @@schema("vehicle")
 }
 
 model Vehicle {
@@ -33,4 +36,5 @@ model Vehicle {
   @@index([ownerId])
   @@index([status])
   @@index([plate])
+  @@schema("vehicle")
 }
