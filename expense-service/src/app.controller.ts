@@ -8,8 +8,10 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Service health check' })
-  @ApiOkResponse({ description: 'Service status and infrastructure configuration.' })
+  @ApiOperation({ summary: 'Verificar saúde do serviço' })
+  @ApiOkResponse({
+    description: 'Status do serviço e configuração da infraestrutura.',
+  })
   getHealth() {
     return this.appService.getHealth();
   }
