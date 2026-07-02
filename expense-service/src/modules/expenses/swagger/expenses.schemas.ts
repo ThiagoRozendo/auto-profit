@@ -1,10 +1,14 @@
 import { ExpenseCategory } from '../../../generated/prisma/client';
 import { dateTimeSchema, decimalSchema, uuidSchema } from '../../../common/swagger';
 
-const EXPENSE_CATEGORIES = Object.values(ExpenseCategory);
-
-
-// ─── Request Schemas ─────────────────────────────────────────────────────────
+const EXPENSE_CATEGORIES = [
+  ExpenseCategory.MAINTENANCE,
+  ExpenseCategory.DOCUMENTATION,
+  ExpenseCategory.CLEANING,
+  ExpenseCategory.TRANSPORT,
+  ExpenseCategory.PARTS,
+  ExpenseCategory.OTHER,
+];
 
 export const createExpenseRequestSchema = {
   type: 'object',
@@ -60,8 +64,6 @@ export const updateExpenseRequestSchema = {
   },
 };
 
-// ─── Response Schemas ─────────────────────────────────────────────────────────
-
 export const expenseResponseSchema = {
   type: 'object',
   properties: {
@@ -87,7 +89,17 @@ export const expenseResponseSchema = {
     createdAt: dateTimeSchema(),
     updatedAt: dateTimeSchema(),
   },
-  required: ['id', 'userId', 'vehicleId', 'description', 'category', 'amount', 'expenseDate', 'createdAt', 'updatedAt'],
+  required: [
+    'id',
+    'userId',
+    'vehicleId',
+    'description',
+    'category',
+    'amount',
+    'expenseDate',
+    'createdAt',
+    'updatedAt',
+  ],
 };
 
 export const expenseListResponseSchema = {

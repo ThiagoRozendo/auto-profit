@@ -34,6 +34,5 @@ export function ExpensesApiTags(): ClassDecorator {
     ApiHeader(X_USER_ID_HEADER),
     ApiHeader(X_USER_EMAIL_HEADER),
     ApiHeader(X_USER_ROLE_HEADER),
-  ) as ClassDecorator;
+  );
 }
-
