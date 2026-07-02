@@ -9,9 +9,9 @@ export default defineConfig({
   datasource: {
     url:
       process.env.DATABASE_URL ??
-      'postgresql://postgres:postgres@localhost:5432/autoprofit?schema=pricing',
+      'postgresql://postgres:postgres@localhost:5433/autoprofit?schema=pricing',
     shadowDatabaseUrl:
       process.env.SHADOW_DATABASE_URL ??
-      'postgresql://postgres:postgres@localhost:5432/autoprofit_shadow?schema=pricing',
+      'postgresql://postgres:postgres@localhost:5433/autoprofit_shadow?schema=pricing',
   },
 });

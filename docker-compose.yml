@@ -141,6 +141,8 @@ services:
       PORT: 3005
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=pricing
       SHADOW_DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit_shadow?schema=pricing
+      VEHICLE_SERVICE_URL: http://vehicle-service:3003
+      EXPENSE_SERVICE_URL: http://expense-service:3004
       RABBITMQ_URL: amqp://rabbitmq:5672
       JWT_SECRET: development-secret
       SWAGGER_DOCS: "true"
