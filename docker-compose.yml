@@ -1,4 +1,18 @@
 services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 4173
+    ports:
+      - "4173:4173"
+    depends_on:
+      - gateway
+
   postgres:
     image: postgres:16-alpine
     container_name: postgres
