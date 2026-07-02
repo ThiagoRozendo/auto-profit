@@ -28,35 +28,75 @@ function SettingsPage() {
 
       <form
         className="space-y-6"
-        onSubmit={(e) => { e.preventDefault(); toast.success("Configurações salvas com sucesso!"); }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          toast.success("Configurações salvas com sucesso!");
+        }}
       >
         <Section title="Operação" description="Padrões usados nos cálculos e alertas do sistema.">
           <Field label="Margem padrão de lucro (%)">
-            <Input type="number" value={margin} onChange={(e) => setMargin(Number(e.target.value))} className="max-w-xs" />
+            <Input
+              type="number"
+              value={margin}
+              onChange={(e) => setMargin(Number(e.target.value))}
+              className="max-w-xs"
+            />
           </Field>
           <Field label="Limite para despesa alta (R$)">
-            <Input type="number" value={highExpense} onChange={(e) => setHighExpense(Number(e.target.value))} className="max-w-xs" />
+            <Input
+              type="number"
+              value={highExpense}
+              onChange={(e) => setHighExpense(Number(e.target.value))}
+              className="max-w-xs"
+            />
           </Field>
           <Field label="Tempo máximo em estoque (dias)">
-            <Input type="number" value={maxDays} onChange={(e) => setMaxDays(Number(e.target.value))} className="max-w-xs" />
+            <Input
+              type="number"
+              value={maxDays}
+              onChange={(e) => setMaxDays(Number(e.target.value))}
+              className="max-w-xs"
+            />
           </Field>
         </Section>
 
         <Section title="Notificações" description="Escolha como deseja receber alertas.">
-          <Toggle label="Alertas por e-mail" checked={notifs.email} onChange={(v) => setNotifs({ ...notifs, email: v })} />
-          <Toggle label="Notificações push" checked={notifs.push} onChange={(v) => setNotifs({ ...notifs, push: v })} />
-          <Toggle label="Resumo semanal" checked={notifs.weekly} onChange={(v) => setNotifs({ ...notifs, weekly: v })} />
+          <Toggle
+            label="Alertas por e-mail"
+            checked={notifs.email}
+            onChange={(v) => setNotifs({ ...notifs, email: v })}
+          />
+          <Toggle
+            label="Notificações push"
+            checked={notifs.push}
+            onChange={(v) => setNotifs({ ...notifs, push: v })}
+          />
+          <Toggle
+            label="Resumo semanal"
+            checked={notifs.weekly}
+            onChange={(v) => setNotifs({ ...notifs, weekly: v })}
+          />
         </Section>
 
         <div className="flex justify-end">
-          <Button type="submit" className="gradient-primary text-primary-foreground"><Save className="mr-2 h-4 w-4" /> Salvar alterações</Button>
+          <Button type="submit" className="gradient-primary text-primary-foreground">
+            <Save className="mr-2 h-4 w-4" /> Salvar alterações
+          </Button>
         </div>
       </form>
     </div>
   );
 }
 
-function Section({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
+function Section({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="card-elevated p-6">
       <div className="mb-4">
@@ -78,7 +118,15 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function Toggle({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) {
+function Toggle({
+  label,
+  checked,
+  onChange,
+}: {
+  label: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+}) {
   return (
     <div className="flex items-center justify-between">
       <Label className="text-sm font-medium">{label}</Label>

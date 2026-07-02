@@ -45,10 +45,16 @@ export function AppTopbar() {
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild><Link to="/settings">Configurações</Link></DropdownMenuItem>
-            <DropdownMenuItem asChild><Link to="/notifications">Notificações</Link></DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/settings">Configurações</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/notifications">Notificações</Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild><Link to="/">Sair</Link></DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/">Sair</Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

@@ -1,5 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BarChart, Bar, Cell, PieChart, Pie, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid, Legend } from "recharts";
+import {
+  BarChart,
+  Bar,
+  Cell,
+  PieChart,
+  Pie,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Legend,
+} from "recharts";
 import { Car, CheckCircle2, DollarSign, Receipt, TrendingUp, Wallet } from "lucide-react";
 import { StatCard } from "@/components/stat-card";
 import { vehicles, expenses, monthlyStats, formatBRL } from "@/lib/mock-data";
@@ -29,7 +41,14 @@ function ReportsPage() {
     }, {}),
   ).map(([name, value]) => ({ name, value }));
 
-  const palette = ["var(--color-chart-1)", "var(--color-chart-2)", "var(--color-chart-3)", "var(--color-chart-4)", "var(--color-chart-5)", "var(--color-muted-foreground)"];
+  const palette = [
+    "var(--color-chart-1)",
+    "var(--color-chart-2)",
+    "var(--color-chart-3)",
+    "var(--color-chart-4)",
+    "var(--color-chart-5)",
+    "var(--color-muted-foreground)",
+  ];
 
   return (
     <div className="space-y-6">
@@ -40,10 +59,30 @@ function ReportsPage() {
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
         <StatCard label="Total investido" value={formatBRL(invest)} icon={Wallet} />
-        <StatCard label="Total de despesas" value={formatBRL(totalExp)} icon={Receipt} tone="warning" />
-        <StatCard label="Lucro esperado" value={formatBRL(lucroEsperado)} icon={DollarSign} tone="primary" />
-        <StatCard label="Lucro realizado" value={formatBRL(lucroReal)} icon={TrendingUp} tone="success" />
-        <StatCard label="Vendidos" value={String(vendidos.length)} icon={CheckCircle2} tone="info" />
+        <StatCard
+          label="Total de despesas"
+          value={formatBRL(totalExp)}
+          icon={Receipt}
+          tone="warning"
+        />
+        <StatCard
+          label="Lucro esperado"
+          value={formatBRL(lucroEsperado)}
+          icon={DollarSign}
+          tone="primary"
+        />
+        <StatCard
+          label="Lucro realizado"
+          value={formatBRL(lucroReal)}
+          icon={TrendingUp}
+          tone="success"
+        />
+        <StatCard
+          label="Vendidos"
+          value={String(vendidos.length)}
+          icon={CheckCircle2}
+          tone="info"
+        />
         <StatCard label="Disponíveis" value={String(disponivel)} icon={Car} />
       </div>
 
@@ -53,13 +92,46 @@ function ReportsPage() {
           <div className="h-80">
             <ResponsiveContainer>
               <BarChart data={monthlyStats}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
-                <XAxis dataKey="month" stroke="var(--color-muted-foreground)" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="var(--color-muted-foreground)" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(v) => `${v / 1000}k`} />
-                <Tooltip contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 8 }} formatter={(v: number) => formatBRL(v)} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="var(--color-border)"
+                  vertical={false}
+                />
+                <XAxis
+                  dataKey="month"
+                  stroke="var(--color-muted-foreground)"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  stroke="var(--color-muted-foreground)"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(v) => `${v / 1000}k`}
+                />
+                <Tooltip
+                  contentStyle={{
+                    background: "var(--color-card)",
+                    border: "1px solid var(--color-border)",
+                    borderRadius: 8,
+                  }}
+                  formatter={(v: number) => formatBRL(v)}
+                />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Bar dataKey="despesas" name="Despesas" fill="var(--color-warning)" radius={[6, 6, 0, 0]} />
-                <Bar dataKey="lucro" name="Lucro esperado" fill="var(--color-primary)" radius={[6, 6, 0, 0]} />
+                <Bar
+                  dataKey="despesas"
+                  name="Despesas"
+                  fill="var(--color-warning)"
+                  radius={[6, 6, 0, 0]}
+                />
+                <Bar
+                  dataKey="lucro"
+                  name="Lucro esperado"
+                  fill="var(--color-primary)"
+                  radius={[6, 6, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -70,10 +142,28 @@ function ReportsPage() {
           <div className="h-80">
             <ResponsiveContainer>
               <PieChart>
-                <Pie data={byCategory} dataKey="value" nameKey="name" innerRadius={55} outerRadius={95} paddingAngle={3} stroke="var(--color-card)" strokeWidth={2}>
-                  {byCategory.map((_, i) => <Cell key={i} fill={palette[i % palette.length]} />)}
+                <Pie
+                  data={byCategory}
+                  dataKey="value"
+                  nameKey="name"
+                  innerRadius={55}
+                  outerRadius={95}
+                  paddingAngle={3}
+                  stroke="var(--color-card)"
+                  strokeWidth={2}
+                >
+                  {byCategory.map((_, i) => (
+                    <Cell key={i} fill={palette[i % palette.length]} />
+                  ))}
                 </Pie>
-                <Tooltip contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 8 }} formatter={(v: number) => formatBRL(v)} />
+                <Tooltip
+                  contentStyle={{
+                    background: "var(--color-card)",
+                    border: "1px solid var(--color-border)",
+                    borderRadius: 8,
+                  }}
+                  formatter={(v: number) => formatBRL(v)}
+                />
                 <Legend wrapperStyle={{ fontSize: 11 }} />
               </PieChart>
             </ResponsiveContainer>

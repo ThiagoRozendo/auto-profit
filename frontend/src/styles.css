@@ -66,7 +66,7 @@
   --popover: oklch(0.22 0.013 250);
   --popover-foreground: oklch(0.97 0.005 250);
 
-  --primary: oklch(0.72 0.18 50);          /* laranja vivo */
+  --primary: oklch(0.72 0.18 50); /* laranja vivo */
   --primary-foreground: oklch(0.16 0.01 250);
   --primary-glow: oklch(0.78 0.17 60);
 
@@ -124,15 +124,25 @@
   * {
     border-color: var(--color-border);
   }
-  html, body, #root {
+  html,
+  body,
+  #root {
     height: 100%;
   }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     background-image:
-      radial-gradient(1200px 600px at 10% -10%, color-mix(in oklab, var(--primary) 12%, transparent), transparent 60%),
-      radial-gradient(900px 500px at 110% 10%, color-mix(in oklab, var(--primary) 8%, transparent), transparent 60%);
+      radial-gradient(
+        1200px 600px at 10% -10%,
+        color-mix(in oklab, var(--primary) 12%, transparent),
+        transparent 60%
+      ),
+      radial-gradient(
+        900px 500px at 110% 10%,
+        color-mix(in oklab, var(--primary) 8%, transparent),
+        transparent 60%
+      );
     background-attachment: fixed;
     font-feature-settings: "cv11", "ss01";
   }

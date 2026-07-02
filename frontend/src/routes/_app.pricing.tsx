@@ -5,7 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { vehicles, formatBRL, totalExpensesByVehicle } from "@/lib/mock-data";
 import { toast } from "sonner";
 
@@ -13,7 +19,10 @@ export const Route = createFileRoute("/_app/pricing")({
   head: () => ({
     meta: [
       { title: "Precificação — AutoProfit" },
-      { name: "description", content: "Calcule preço sugerido e lucro esperado para cada veículo." },
+      {
+        name: "description",
+        content: "Calcule preço sugerido e lucro esperado para cada veículo.",
+      },
     ],
   }),
   component: PricingPage,
@@ -29,17 +38,22 @@ function PricingPage() {
   const profit = invest * (margin / 100);
   const suggested = invest + profit;
 
-  const items = useMemo(() => ([
-    { label: "Valor de compra", value: formatBRL(v.purchasePrice) },
-    { label: "Total de despesas", value: formatBRL(totalExp) },
-    { label: "Investimento total", value: formatBRL(invest) },
-  ]), [v, totalExp, invest]);
+  const items = useMemo(
+    () => [
+      { label: "Valor de compra", value: formatBRL(v.purchasePrice) },
+      { label: "Total de despesas", value: formatBRL(totalExp) },
+      { label: "Investimento total", value: formatBRL(invest) },
+    ],
+    [v, totalExp, invest],
+  );
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Precificação</h1>
-        <p className="text-sm text-muted-foreground">Defina margem de lucro e calcule o preço sugerido.</p>
+        <p className="text-sm text-muted-foreground">
+          Defina margem de lucro e calcule o preço sugerido.
+        </p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-5">
@@ -47,10 +61,14 @@ function PricingPage() {
           <div className="space-y-2">
             <Label>Veículo</Label>
             <Select value={vehicleId} onValueChange={setVehicleId}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 {vehicles.map((vv) => (
-                  <SelectItem key={vv.id} value={vv.id}>{vv.brand} {vv.model} • {vv.plate}</SelectItem>
+                  <SelectItem key={vv.id} value={vv.id}>
+                    {vv.brand} {vv.model} • {vv.plate}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -68,13 +86,30 @@ function PricingPage() {
           <div className="space-y-3">
             <div className="flex items-end justify-between">
               <Label>Margem de lucro</Label>
-              <Input type="number" value={margin} onChange={(e) => setMargin(Number(e.target.value))} className="w-24 text-right tabular-nums" />
+              <Input
+                type="number"
+                value={margin}
+                onChange={(e) => setMargin(Number(e.target.value))}
+                className="w-24 text-right tabular-nums"
+              />
             </div>
-            <Slider value={[margin]} onValueChange={(v) => setMargin(v[0])} min={0} max={50} step={1} />
-            <div className="flex justify-between text-[11px] text-muted-foreground"><span>0%</span><span>50%</span></div>
+            <Slider
+              value={[margin]}
+              onValueChange={(v) => setMargin(v[0])}
+              min={0}
+              max={50}
+              step={1}
+            />
+            <div className="flex justify-between text-[11px] text-muted-foreground">
+              <span>0%</span>
+              <span>50%</span>
+            </div>
           </div>
 
-          <Button className="w-full gradient-primary text-primary-foreground" onClick={() => toast.success("Preço calculado e salvo!")}>
+          <Button
+            className="w-full gradient-primary text-primary-foreground"
+            onClick={() => toast.success("Preço calculado e salvo!")}
+          >
             <Calculator className="mr-2 h-4 w-4" /> Aplicar precificação
           </Button>
         </div>
@@ -90,13 +125,23 @@ function PricingPage() {
 
             <div className="mt-6 grid gap-6 md:grid-cols-2">
               <div>
-                <p className="text-xs uppercase tracking-wider text-muted-foreground">Lucro esperado</p>
-                <p className="mt-2 text-4xl font-bold tracking-tight text-success">{formatBRL(profit)}</p>
-                <p className="mt-1 text-xs text-muted-foreground">Margem de {margin}% sobre o investimento</p>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                  Lucro esperado
+                </p>
+                <p className="mt-2 text-4xl font-bold tracking-tight text-success">
+                  {formatBRL(profit)}
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Margem de {margin}% sobre o investimento
+                </p>
               </div>
               <div>
-                <p className="text-xs uppercase tracking-wider text-muted-foreground">Preço sugerido</p>
-                <p className="mt-2 text-4xl font-bold tracking-tight text-gradient-primary">{formatBRL(suggested)}</p>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                  Preço sugerido
+                </p>
+                <p className="mt-2 text-4xl font-bold tracking-tight text-gradient-primary">
+                  {formatBRL(suggested)}
+                </p>
                 <p className="mt-1 text-xs text-muted-foreground">Para anúncio público</p>
               </div>
             </div>
@@ -117,7 +162,9 @@ function Stat({ label, value, accent }: { label: string; value: string; accent?:
   return (
     <div>
       <p className="text-[11px] uppercase tracking-wider text-muted-foreground">{label}</p>
-      <p className={`mt-1 text-lg font-bold tabular-nums ${accent ? "text-primary" : ""}`}>{value}</p>
+      <p className={`mt-1 text-lg font-bold tabular-nums ${accent ? "text-primary" : ""}`}>
+        {value}
+      </p>
     </div>
   );
 }
