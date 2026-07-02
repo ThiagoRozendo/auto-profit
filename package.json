@@ -30,7 +30,7 @@
     "lint": "eslint .",
     "docker:infra:up": "docker compose up -d postgres rabbitmq",
     "docker:infra:down": "docker compose stop postgres rabbitmq",
-    "docker:apps:down": "docker compose stop gateway auth-service vehicle-service expense-service pricing-service report-service notification-service",
+    "docker:apps:down": "docker compose stop frontend gateway auth-service vehicle-service expense-service pricing-service report-service notification-service",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:config": "docker compose config"
