@@ -14,9 +14,26 @@ const X_USER_ID_HEADER = {
   },
 };
 
+const X_USER_EMAIL_HEADER = {
+  name: 'x-user-email',
+  required: false,
+  description: 'E-mail do usuário autenticado. Enviado automaticamente pelo API Gateway.',
+  schema: { type: 'string', format: 'email', example: 'joao.silva@example.com' },
+};
+
+const X_USER_ROLE_HEADER = {
+  name: 'x-user-role',
+  required: false,
+  description: 'Papel (role) do usuário autenticado. Enviado automaticamente pelo API Gateway.',
+  schema: { type: 'string', enum: ['ADMIN', 'MANAGER', 'SELLER'], example: 'SELLER' },
+};
+
 export function ExpensesApiTags(): ClassDecorator {
   return applyDecorators(
     ApiTags('Expenses'),
     ApiHeader(X_USER_ID_HEADER),
+    ApiHeader(X_USER_EMAIL_HEADER),
+    ApiHeader(X_USER_ROLE_HEADER),
   ) as ClassDecorator;
 }
+

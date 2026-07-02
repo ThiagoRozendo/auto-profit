@@ -1,6 +1,8 @@
+import { ExpenseCategory } from '../../../generated/prisma/client';
 import { dateTimeSchema, decimalSchema, uuidSchema } from '../../../common/swagger';
 
-const EXPENSE_CATEGORIES = ['MAINTENANCE', 'DOCUMENTATION', 'CLEANING', 'TRANSPORT', 'PARTS', 'OTHER'];
+const EXPENSE_CATEGORIES = Object.values(ExpenseCategory);
+
 
 // ─── Request Schemas ─────────────────────────────────────────────────────────
 

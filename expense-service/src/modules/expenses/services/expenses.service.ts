@@ -137,13 +137,11 @@ export class ExpensesService {
   }
 
   async getVehicleTotal(vehicleId: string, userId: string) {
-    const [aggregate] = await Promise.all([
-      this.prisma.expense.aggregate({
-        where: { vehicleId, userId },
-        _sum: { amount: true },
-        _count: { id: true },
-      }),
-    ]);
+    const aggregate = await this.prisma.expense.aggregate({
+      where: { vehicleId, userId },
+      _sum: { amount: true },
+      _count: { id: true },
+    });
 
     return {
       vehicleId,
