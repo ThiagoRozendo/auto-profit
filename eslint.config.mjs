@@ -7,6 +7,7 @@ export default tseslint.config(
     {
         ignores: [
             'eslint.config.mjs',
+            'frontend/**',
             '**/dist/**',
             '**/prisma.config.ts',
             'scripts/*.mjs',
