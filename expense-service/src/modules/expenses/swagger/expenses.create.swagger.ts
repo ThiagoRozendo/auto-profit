@@ -9,7 +9,7 @@ export function CreateExpenseApiDocs(): MethodDecorator {
       summary: 'Cadastrar despesa',
       description:
         'Cria uma nova despesa associada ao usuário autenticado e ao veículo informado. ' +
-        'O campo expenseDate usa a data atual se não informado.',
+        'O campo expenseDate usa a data atual se não for informado.',
     }),
     ApiBody({
       required: true,

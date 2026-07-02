@@ -1,5 +1,9 @@
-import { createParamDecorator, ExecutionContext, UnauthorizedException } from '@nestjs/common';
-import { Request } from 'express';
+import {
+  UnauthorizedException,
+  createParamDecorator,
+  type ExecutionContext,
+} from '@nestjs/common';
+import { type Request } from 'express';
 
 export interface InternalUser {
   id: string;
@@ -11,13 +15,13 @@ export interface InternalUser {
  * Extrai o usuário autenticado dos headers internos repassados pelo API Gateway.
  *
  * Headers esperados:
- *   x-user-id    → UUID do usuário autenticado
- *   x-user-email → e-mail do usuário autenticado
- *   x-user-role  → papel (role) do usuário autenticado
+ *   x-user-id    -> UUID do usuário autenticado
+ *   x-user-email -> e-mail do usuário autenticado
+ *   x-user-role  -> papel (role) do usuário autenticado
  *
  * O Gateway validará o Bearer Token JWT e injetará esses headers antes de
  * encaminhar a requisição para este serviço.
- * Para testes diretos, enviar o header x-user-id manualmente.
+ * Para testes diretos, envie o header x-user-id manualmente.
  */
 export const InternalUser = createParamDecorator(
   (_data: unknown, ctx: ExecutionContext): InternalUser => {

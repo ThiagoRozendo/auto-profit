@@ -9,7 +9,7 @@ export function UpdateExpenseApiDocs(): MethodDecorator {
       summary: 'Atualizar despesa',
       description:
         'Atualiza campos da despesa. Só permite atualizar despesas do usuário autenticado. ' +
-        'Todos os campos são opcionais — apenas os enviados serão atualizados.',
+        'Todos os campos são opcionais e apenas os enviados serão atualizados.',
     }),
     ApiUuidParam('id', 'Identificador único da despesa.'),
     ApiBody({

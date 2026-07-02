@@ -13,7 +13,7 @@ export function ApiUuidParam(
         type: 'string',
         format: 'uuid',
       },
-      example: '11111111-1111-1111-1111-111111111111',
+      example: '11111111-1111-4111-8111-111111111111',
     }),
   );
 }

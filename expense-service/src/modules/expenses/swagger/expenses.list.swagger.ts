@@ -1,34 +1,37 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { ApiCommonErrorResponses } from '../../../common/swagger';
-import { expenseListResponseSchema } from './expenses.schemas';
+import {
+  expenseCategoryEnumValues,
+  expenseListResponseSchema,
+} from './expenses.schemas';
 
 export function ListExpensesApiDocs(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
       summary: 'Listar despesas',
       description:
-        'Retorna todas as despesas do usuário autenticado. ' +
-        'Suporta filtros opcionais por veículo, categoria, texto, e intervalo de datas.',
+        'Retorna as despesas do usuário autenticado. ' +
+        'Aceita filtros opcionais por veículo, categoria, texto e intervalo de datas.',
     }),
     ApiQuery({
       name: 'vehicleId',
       required: false,
       schema: { type: 'string', format: 'uuid' },
       description: 'Filtrar despesas de um veículo específico.',
-      example: '22222222-2222-2222-2222-222222222222',
+      example: '22222222-2222-4222-8222-222222222222',
     }),
     ApiQuery({
       name: 'category',
       required: false,
-      enum: ['MAINTENANCE', 'DOCUMENTATION', 'CLEANING', 'TRANSPORT', 'PARTS', 'OTHER'],
+      enum: expenseCategoryEnumValues,
       description: 'Filtrar por categoria.',
     }),
     ApiQuery({
       name: 'search',
       required: false,
       schema: { type: 'string' },
-      description: 'Buscar por descrição ou label do veículo.',
+      description: 'Buscar por descrição ou rótulo do veículo.',
       example: 'pneus',
     }),
     ApiQuery({

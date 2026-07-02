@@ -69,7 +69,7 @@ export function ApiCommonErrorResponses(
       ApiBadRequestResponse({
         description: 'Dados de entrada inválidos.',
         schema: errorResponseSchema(400, 'Bad Request', [
-          'amount must not be less than 0',
+          'O valor não pode ser negativo',
         ]),
       }),
     );
@@ -101,7 +101,7 @@ export function ApiCommonErrorResponses(
     decorators.push(
       ApiForbiddenResponse({
         description: 'Acesso negado.',
-        schema: errorResponseSchema(403, 'Forbidden', 'Forbidden resource'),
+        schema: errorResponseSchema(403, 'Forbidden', 'Recurso proibido'),
       }),
     );
   }
@@ -126,7 +126,7 @@ export function ApiCommonErrorResponses(
         schema: errorResponseSchema(
           500,
           'Internal Server Error',
-          'Internal server error',
+          'Erro interno do servidor',
         ),
       }),
     );

@@ -34,10 +34,6 @@ import {
 export class ExpensesController {
   constructor(private readonly expensesService: ExpensesService) {}
 
-  // ─── GET /expenses/vehicle/:vehicleId/total ──────────────────────────────────
-  // IMPORTANTE: rotas estáticas devem vir antes das rotas dinâmicas (:id)
-  // para evitar que o NestJS interprete 'vehicle' como um :id.
-
   @Get('vehicle/:vehicleId/total')
   @GetVehicleExpensesTotalApiDocs()
   getVehicleTotal(
@@ -47,8 +43,6 @@ export class ExpensesController {
     return this.expensesService.getVehicleTotal(vehicleId, user.id);
   }
 
-  // ─── GET /expenses/vehicle/:vehicleId ────────────────────────────────────────
-
   @Get('vehicle/:vehicleId')
   @ListExpensesByVehicleApiDocs()
   findByVehicle(
@@ -57,8 +51,6 @@ export class ExpensesController {
   ) {
     return this.expensesService.findByVehicle(vehicleId, user.id);
   }
-
-  // ─── POST /expenses ──────────────────────────────────────────────────────────
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -70,8 +62,6 @@ export class ExpensesController {
     return this.expensesService.create(user.id, dto);
   }
 
-  // ─── GET /expenses ───────────────────────────────────────────────────────────
-
   @Get()
   @ListExpensesApiDocs()
   findAll(
@@ -81,15 +71,11 @@ export class ExpensesController {
     return this.expensesService.findAll(user.id, query);
   }
 
-  // ─── GET /expenses/:id ───────────────────────────────────────────────────────
-
   @Get(':id')
   @GetExpenseByIdApiDocs()
   findOne(@Param('id') id: string, @InternalUser() user: IUser) {
     return this.expensesService.findOne(id, user.id);
   }
-
-  // ─── PATCH /expenses/:id ─────────────────────────────────────────────────────
 
   @Patch(':id')
   @UpdateExpenseApiDocs()
@@ -100,8 +86,6 @@ export class ExpensesController {
   ) {
     return this.expensesService.update(id, dto, user.id);
   }
-
-  // ─── DELETE /expenses/:id ────────────────────────────────────────────────────
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
