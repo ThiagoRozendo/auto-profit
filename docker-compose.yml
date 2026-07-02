@@ -31,6 +31,8 @@ services:
       NODE_ENV: development
       SERVICE_NAME: gateway
       PORT: 3001
+      AUTH_SERVICE_URL: http://auth-service:3002
+      VEHICLE_SERVICE_URL: http://vehicle-service:3003
       DATABASE_URL: ""
       SHADOW_DATABASE_URL: ""
       RABBITMQ_URL: amqp://rabbitmq:5672
@@ -80,7 +82,6 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit?schema=vehicle
       SHADOW_DATABASE_URL: postgresql://postgres:postgres@postgres:5432/autoprofit_shadow?schema=vehicle
       RABBITMQ_URL: amqp://rabbitmq:5672
-      JWT_SECRET: development-secret
       SWAGGER_DOCS: "true"
       SWAGGER_ROUTE: api
       API_DOCS_UI: scalar

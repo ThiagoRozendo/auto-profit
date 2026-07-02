@@ -2,16 +2,35 @@ import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export function setupApiDocs(app: INestApplication): void {
-  if (!isDocsEnabled(process.env.SWAGGER_DOCS)) return;
+  if (!isDocsEnabled(process.env.SWAGGER_DOCS)) {
+    return;
+  }
+
   const route = normalizeRoute(process.env.SWAGGER_ROUTE);
   const jsonDocumentUrl = `${route}-json`;
-  const document = SwaggerModule.createDocument(app, new DocumentBuilder().setTitle(`${process.env.SERVICE_NAME ?? 'expense-service'} API`).setDescription('AutoProfit distributed service API documentation.').setVersion('1.0.0').build(), { autoTagControllers: true });
+  const document = SwaggerModule.createDocument(
+    app,
+    new DocumentBuilder()
+      .setTitle(`${process.env.SERVICE_NAME ?? 'expense-service'} API`)
+      .setDescription('Documentação da API distribuída do AutoProfit.')
+      .setVersion('1.0.0')
+      .build(),
+    { autoTagControllers: true },
+  );
+
   if (resolveDocsUi(process.env.API_DOCS_UI) === 'swagger') {
     SwaggerModule.setup(route, app, document, { jsonDocumentUrl, raw: ['json'] });
     return;
   }
-  SwaggerModule.setup(route, app, document, { jsonDocumentUrl, raw: ['json'], ui: false });
-  app.use(`/${route}`, (_request, response) => response.type('html').send(renderScalarHtml(`/${jsonDocumentUrl}`)));
+
+  SwaggerModule.setup(route, app, document, {
+    jsonDocumentUrl,
+    raw: ['json'],
+    ui: false,
+  });
+  app.use(`/${route}`, (_request, response) =>
+    response.type('html').send(renderScalarHtml(`/${jsonDocumentUrl}`)),
+  );
 }
 
 function isDocsEnabled(value?: string): boolean {
