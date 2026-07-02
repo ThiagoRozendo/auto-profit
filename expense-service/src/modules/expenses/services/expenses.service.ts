@@ -2,31 +2,36 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma } from '../../../generated/prisma/client';
+import {
+  ExpenseCategory,
+  Prisma,
+  type Expense,
+} from '../../../generated/prisma/client';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { CreateExpenseDto } from '../dto/create-expense.dto';
 import { ListExpensesQueryDto } from '../dto/list-expenses-query.dto';
 import { UpdateExpenseDto } from '../dto/update-expense.dto';
 
+type ExpenseResponse = Omit<Expense, 'amount'> & {
+  amount: number;
+};
+
 @Injectable()
 export class ExpensesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // ─── helpers ────────────────────────────────────────────────────────────────
-
-  /** Converte campos Decimal do Prisma para Number, tornando o JSON amigável ao frontend. */
-  private serialize(expense: Record<string, unknown>): Record<string, unknown> {
+  private serialize(expense: Expense): ExpenseResponse {
     return {
       ...expense,
-      amount: expense.amount != null ? Number(expense.amount) : null,
+      amount: Number(expense.amount),
     };
   }
 
   /**
    * Retorna a despesa se existir e pertencer ao usuário.
-   * Lança NotFoundException caso contrário — sem expor dados de outro usuário.
+   * Lança NotFoundException caso contrário, sem expor dados de outro usuário.
    */
-  private async findOwnedOrFail(id: string, userId: string) {
+  private async findOwnedOrFail(id: string, userId: string): Promise<Expense> {
     const expense = await this.prisma.expense.findFirst({
       where: { id, userId },
     });
@@ -38,25 +43,26 @@ export class ExpensesService {
     return expense;
   }
 
-  // ─── public methods ──────────────────────────────────────────────────────────
-
-  async create(userId: string, dto: CreateExpenseDto) {
+  async create(userId: string, dto: CreateExpenseDto): Promise<ExpenseResponse> {
     const expense = await this.prisma.expense.create({
       data: {
         userId,
         vehicleId: dto.vehicleId,
         vehicleLabel: dto.vehicleLabel ?? null,
         description: dto.description,
-        category: dto.category,
+        category: dto.category ?? ExpenseCategory.OTHER,
         amount: dto.amount,
         expenseDate: dto.expenseDate ? new Date(dto.expenseDate) : new Date(),
       },
     });
 
-    return this.serialize(expense as unknown as Record<string, unknown>);
+    return this.serialize(expense);
   }
 
-  async findAll(userId: string, query: ListExpensesQueryDto) {
+  async findAll(
+    userId: string,
+    query: ListExpensesQueryDto,
+  ): Promise<ExpenseResponse[]> {
     const where: Prisma.ExpenseWhereInput = { userId };
 
     if (query.vehicleId) {
@@ -76,13 +82,17 @@ export class ExpensesService {
     }
 
     if (query.startDate || query.endDate) {
-      where.expenseDate = {};
+      const expenseDate: Prisma.DateTimeFilter = {};
+
       if (query.startDate) {
-        (where.expenseDate as Prisma.DateTimeFilter).gte = new Date(query.startDate);
+        expenseDate.gte = new Date(query.startDate);
       }
+
       if (query.endDate) {
-        (where.expenseDate as Prisma.DateTimeFilter).lte = new Date(query.endDate);
+        expenseDate.lte = new Date(query.endDate);
       }
+
+      where.expenseDate = expenseDate;
     }
 
     const expenses = await this.prisma.expense.findMany({
@@ -90,17 +100,19 @@ export class ExpensesService {
       orderBy: [{ expenseDate: 'desc' }, { createdAt: 'desc' }],
     });
 
-    return expenses.map((e) =>
-      this.serialize(e as unknown as Record<string, unknown>),
-    );
+    return expenses.map((expense) => this.serialize(expense));
   }
 
-  async findOne(id: string, userId: string) {
+  async findOne(id: string, userId: string): Promise<ExpenseResponse> {
     const expense = await this.findOwnedOrFail(id, userId);
-    return this.serialize(expense as unknown as Record<string, unknown>);
+    return this.serialize(expense);
   }
 
-  async update(id: string, dto: UpdateExpenseDto, userId: string) {
+  async update(
+    id: string,
+    dto: UpdateExpenseDto,
+    userId: string,
+  ): Promise<ExpenseResponse> {
     await this.findOwnedOrFail(id, userId);
 
     const expense = await this.prisma.expense.update({
@@ -117,23 +129,24 @@ export class ExpensesService {
       },
     });
 
-    return this.serialize(expense as unknown as Record<string, unknown>);
+    return this.serialize(expense);
   }
 
-  async remove(id: string, userId: string) {
+  async remove(id: string, userId: string): Promise<void> {
     await this.findOwnedOrFail(id, userId);
     await this.prisma.expense.delete({ where: { id } });
   }
 
-  async findByVehicle(vehicleId: string, userId: string) {
+  async findByVehicle(
+    vehicleId: string,
+    userId: string,
+  ): Promise<ExpenseResponse[]> {
     const expenses = await this.prisma.expense.findMany({
       where: { vehicleId, userId },
       orderBy: [{ expenseDate: 'desc' }, { createdAt: 'desc' }],
     });
 
-    return expenses.map((e) =>
-      this.serialize(e as unknown as Record<string, unknown>),
-    );
+    return expenses.map((expense) => this.serialize(expense));
   }
 
   async getVehicleTotal(vehicleId: string, userId: string) {
@@ -145,7 +158,8 @@ export class ExpensesService {
 
     return {
       vehicleId,
-      totalExpenses: aggregate._sum.amount != null ? Number(aggregate._sum.amount) : 0,
+      totalExpenses:
+        aggregate._sum.amount != null ? Number(aggregate._sum.amount) : 0,
       count: aggregate._count.id,
     };
   }

@@ -1,5 +1,7 @@
-import { IsDateString, IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsDateString, IsIn, IsOptional, IsString, IsUUID } from 'class-validator';
 import { ExpenseCategory } from '../../../generated/prisma/client';
+
+const EXPENSE_CATEGORIES = Object.values(ExpenseCategory);
 
 export class ListExpensesQueryDto {
   @IsOptional()
@@ -7,7 +9,7 @@ export class ListExpensesQueryDto {
   vehicleId?: string;
 
   @IsOptional()
-  @IsEnum(ExpenseCategory, { message: 'Categoria inválida' })
+  @IsIn(EXPENSE_CATEGORIES, { message: 'Categoria inválida' })
   category?: ExpenseCategory;
 
   @IsOptional()

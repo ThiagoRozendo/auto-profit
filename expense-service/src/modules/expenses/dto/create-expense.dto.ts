@@ -1,6 +1,6 @@
 import {
   IsDateString,
-  IsEnum,
+  IsIn,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -9,6 +9,8 @@ import {
   Min,
 } from 'class-validator';
 import { ExpenseCategory } from '../../../generated/prisma/client';
+
+const EXPENSE_CATEGORIES = Object.values(ExpenseCategory);
 
 export class CreateExpenseDto {
   @IsUUID('4', { message: 'vehicleId deve ser um UUID válido' })
@@ -23,7 +25,7 @@ export class CreateExpenseDto {
   description: string;
 
   @IsOptional()
-  @IsEnum(ExpenseCategory, { message: 'Categoria inválida' })
+  @IsIn(EXPENSE_CATEGORIES, { message: 'Categoria inválida' })
   category?: ExpenseCategory;
 
   @IsNumber({}, { message: 'O valor deve ser um número' })

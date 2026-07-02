@@ -3,7 +3,7 @@ import { CreateExpenseDto } from './create-expense.dto';
 
 /**
  * DTO de atualização de despesa.
- * Todos os campos são opcionais — herdados via PartialType do CreateExpenseDto,
- * mantendo todas as validações class-validator originais.
+ * Todos os campos são opcionais, herdados via PartialType do CreateExpenseDto,
+ * mantendo as validações originais do class-validator.
  */
 export class UpdateExpenseDto extends PartialType(CreateExpenseDto) {}
